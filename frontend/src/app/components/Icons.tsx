@@ -61,3 +61,8 @@ export const LoadingSpinner = () => (
     </div>
   );
     
+// Instead of the previous ShareChatIcon, we'll create a RedditIcon that uses an image.
+export const RedditIcon = () => (
+    <img src="/reddit.svg" alt="Reddit Icon" className="w-8 h-8" />
+  );
+  

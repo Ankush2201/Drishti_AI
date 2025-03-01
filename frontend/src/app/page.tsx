@@ -3,7 +3,7 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { TwitterIcon, GlobeIcon, MastodonIcon } from "./components/Icons";
+import { TwitterIcon, GlobeIcon, MastodonIcon,RedditIcon } from "./components/Icons";
 
 export default function HomePage() {
   const [selectedSources, setSelectedSources] = useState({
@@ -67,8 +67,7 @@ export default function HomePage() {
                 in real-time.
               </p>
             </div>
-
-            {/* Websites Card */}
+            {/* Reddit Card */}
             <div
               onClick={() =>
                 setSelectedSources((prev) => ({
@@ -83,19 +82,19 @@ export default function HomePage() {
               } rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:-translate-y-1`}
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="text-green-400">
-                  <GlobeIcon />
+                <div className="text-orange-500">
+                  <RedditIcon />
                 </div>
                 <span className="text-xs text-gray-400 bg-gray-700/50 px-3 py-1 rounded-full">
-                  Web Data
+                  Reddit Data
                 </span>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                Website Insights
+                Reddit Insights
               </h3>
               <p className="text-gray-400">
-                Comprehensive analysis of web content, traffic patterns, and user
-                behavior.
+                Comprehensive analysis of Reddit trends, discussions, and
+                engagement.
               </p>
             </div>
 
