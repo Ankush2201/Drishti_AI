@@ -9,7 +9,7 @@ import csv
 import os
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
-
+import json
 app = FastAPI(
     title="News Reliability Checker API",
     description="API to verify if a news URL is from a known unreliable source and return additional info.",
@@ -56,6 +56,9 @@ def get_reddit_mentions(url: str) -> int:
         response = requests.get(endpoint, headers=headers)
         response.raise_for_status()
         data = response.json()
+        # with open("data.json", "w") as json_file:
+        #     json.dump(data, json_file, indent=4)
+        # print(data)
         posts = data.get('data', {}).get('children', [])
         return len(posts)
     except Exception as e:
