@@ -1,58 +1,24 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  SearchIcon,
-  TwitterIcon,
-  GlobeIcon,
-  MastodonIcon,
-  LoadingSpinner,
-} from "./components/Icons";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import SearchBar from "./components/SearchBar";
+import { TwitterIcon, GlobeIcon, MastodonIcon } from "./components/Icons";
 
-export default function LandingPage() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+export default function HomePage() {
   const [selectedSources, setSelectedSources] = useState({
     twitter: false,
     websites: false,
     mastodon: false,
   });
 
-  const handleSearch = async () => {
-    if (!searchQuery) return;
-
-    const sources = Object.entries(selectedSources)
-      .filter(([_, isSelected]) => isSelected)
-      .map(([source]) => source);
-
-    if (sources.length === 0) return;
-
-    setIsLoading(true);
-    const queryString = new URLSearchParams({
-      q: searchQuery,
-      sources: sources.join(","),
-    }).toString();
-
-    try {
-      router.push(`/dashboard?${queryString}`);
-    } catch (error) {
-      console.error("Navigation error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
       <Navbar />
 
-      {/* Hero Section */}
       <main className="flex-grow">
         <div className="container mx-auto px-6 py-16">
-          {/* Hero Text */}
+          {/* Hero Section */}
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Analyze Social Media{" "}
@@ -67,38 +33,7 @@ export default function LandingPage() {
           </div>
 
           {/* Search Bar */}
-          <div className="max-w-3xl mx-auto mb-16">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <SearchIcon />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Enter keywords to analyze..."
-                className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-700 rounded-xl 
-                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                         focus:ring-blue-500 focus:border-transparent backdrop-blur-sm
-                         transition-all duration-300"
-              />
-              <button
-                onClick={handleSearch}
-                disabled={
-                  isLoading ||
-                  !searchQuery ||
-                  !Object.values(selectedSources).some(Boolean)
-                }
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                         px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 
-                         text-white rounded-lg hover:from-blue-700 hover:to-purple-700 
-                         transition-all duration-300 disabled:opacity-50 
-                         disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {isLoading ? <LoadingSpinner /> : "Analyze"}
-              </button>
-            </div>
-          </div>
+          <SearchBar selectedSources={selectedSources} />
 
           {/* Platform Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -110,14 +45,11 @@ export default function LandingPage() {
                   twitter: !prev.twitter,
                 }))
               }
-              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border 
-                       ${
-                         selectedSources.twitter
-                           ? "border-blue-500 ring-2 ring-blue-500/50"
-                           : "border-gray-700"
-                       } 
-                       rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 
-                       hover:transform hover:-translate-y-1`}
+              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border ${
+                selectedSources.twitter
+                  ? "border-blue-500 ring-2 ring-blue-500/50"
+                  : "border-gray-700"
+              } rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:-translate-y-1`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="text-blue-400">
@@ -131,8 +63,8 @@ export default function LandingPage() {
                 Twitter Analytics
               </h3>
               <p className="text-gray-400">
-                Track engagement, analyze trends, and monitor social sentiment in
-                real-time.
+                Track engagement, analyze trends, and monitor social sentiment
+                in real-time.
               </p>
             </div>
 
@@ -144,14 +76,11 @@ export default function LandingPage() {
                   websites: !prev.websites,
                 }))
               }
-              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border 
-                       ${
-                         selectedSources.websites
-                           ? "border-green-500 ring-2 ring-green-500/50"
-                           : "border-gray-700"
-                       } 
-                       rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 
-                       hover:transform hover:-translate-y-1`}
+              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border ${
+                selectedSources.websites
+                  ? "border-green-500 ring-2 ring-green-500/50"
+                  : "border-gray-700"
+              } rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:-translate-y-1`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="text-green-400">
@@ -178,14 +107,11 @@ export default function LandingPage() {
                   mastodon: !prev.mastodon,
                 }))
               }
-              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border 
-                       ${
-                         selectedSources.mastodon
-                           ? "border-purple-500 ring-2 ring-purple-500/50"
-                           : "border-gray-700"
-                       } 
-                       rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 
-                       hover:transform hover:-translate-y-1`}
+              className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border ${
+                selectedSources.mastodon
+                  ? "border-purple-500 ring-2 ring-purple-500/50"
+                  : "border-gray-700"
+              } rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:-translate-y-1`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="text-purple-400">
