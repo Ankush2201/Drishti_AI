@@ -8,11 +8,20 @@ import requests
 import csv
 import os
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="News Reliability Checker API",
     description="API to verify if a news URL is from a known unreliable source and return additional info.",
     version="1.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Load your CSV file with known unreliable sources

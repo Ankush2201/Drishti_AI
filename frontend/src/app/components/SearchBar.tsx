@@ -5,7 +5,7 @@ import { SearchIcon, LoadingSpinner } from "./Icons";
 
 interface SelectedSources {
   twitter: boolean;
-  websites: boolean;
+  reddit: boolean;
   mastodon: boolean;
 }
 
@@ -30,7 +30,7 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
       // Hashtag search: valid only if it starts with a "#"
       isQueryValid = trimmedQuery.startsWith("#");
     } else if (searchType === "website") {
-      // Website search: validate using a regex that checks for a valid domain/URL.
+      // Website search: validate using a regex for a valid domain/URL.
       const websiteRegex =
         /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
       isQueryValid = websiteRegex.test(trimmedQuery);
@@ -43,9 +43,7 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
   const handleSearch = async () => {
     if (!isQueryValid) return;
 
-    // Determine sources:
-    // If selectedSources are provided and at least one is selected, then use them.
-    // Otherwise, fall back to default sources.
+    // Determine sources based on what is selected.
     let sources: string[] = [];
     if (
       selectedSources &&
@@ -55,7 +53,7 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
         .filter(([_, isSelected]) => isSelected)
         .map(([source]) => source);
     } else {
-      sources = ["twitter", "websites", "mastodon"];
+      sources = ["twitter", "reddit", "mastodon"];
     }
 
     setIsLoading(true);

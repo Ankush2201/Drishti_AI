@@ -3,12 +3,16 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { TwitterIcon, GlobeIcon, MastodonIcon,RedditIcon } from "./components/Icons";
+import {
+  TwitterIcon,
+  RedditIcon,
+  MastodonIcon,
+} from "./components/Icons";
 
 export default function HomePage() {
   const [selectedSources, setSelectedSources] = useState({
     twitter: false,
-    websites: false,
+    reddit: false,
     mastodon: false,
   });
 
@@ -67,16 +71,17 @@ export default function HomePage() {
                 in real-time.
               </p>
             </div>
+
             {/* Reddit Card */}
             <div
               onClick={() =>
                 setSelectedSources((prev) => ({
                   ...prev,
-                  websites: !prev.websites,
+                  reddit: !prev.reddit,
                 }))
               }
               className={`cursor-pointer group bg-gray-800/50 backdrop-blur-sm border ${
-                selectedSources.websites
+                selectedSources.reddit
                   ? "border-green-500 ring-2 ring-green-500/50"
                   : "border-gray-700"
               } rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:-translate-y-1`}
@@ -139,7 +144,9 @@ export default function HomePage() {
               <span className="px-4 py-2 text-sm text-gray-400">
                 Custom Reports
               </span>
-              <span className="px-4 py-2 text-sm text-gray-400">API Access</span>
+              <span className="px-4 py-2 text-sm text-gray-400">
+                API Access
+              </span>
             </div>
           </div>
         </div>
