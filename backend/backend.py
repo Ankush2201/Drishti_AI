@@ -4,8 +4,10 @@ import pandas as pd
 import whois
 import validators
 from urllib.parse import urlparse
-import random
-import io
+import requests
+import csv
+import os
+from datetime import datetime
 
 app = FastAPI(
     title="News Reliability Checker API",
@@ -13,28 +15,10 @@ app = FastAPI(
     version="1.0"
 )
 
-# --- Sample Dataset ---
-# DATA = """
-# Domain,Site Rank,Year online,Name,MBFC Fact,MBFC Bias,MBFC cred,Media Bias/Fact Check,Wiki Fake,Wiki RSP,Wiki DEPS,Wikipedia,Quality,MisinfoMe,Lang,URL,Score
-# 100percentfedup.com,72284,2012,100 Percent Fed Up,L,FN,L,https://mediabiasfactcheck.com/100-percent-fed-up/,1,,,0.2,-0.9,en,https://100percentfedup.com/,0.1
-# 10news.one,30000000,2017,10News.one,L,FN,L,https://mediabiasfactcheck.com/10news-one/,,,0.2,0,en,https://www.10news.one/,0.1
-# 12minutos.com,276039,2008,12minutos.com,L,FN,L,https://mediabiasfactcheck.com/12minutos-com/,1,,,0.2,-1,es,https://www.12minutos.com/,0.1
-# 163.com,309,1997,NetEase,M,FN,L,https://mediabiasfactcheck.com/netease-163-com-bias/,,https://en.wikipedia.org/wiki/NetEase,,0.2,zh,https://www.163.com/,0.2
-# 1tv.ru,2598,2002,Channel One Russia,M,FN,L,https://mediabiasfactcheck.com/channel-one-russia-bias/,,https://en.wikipedia.org/wiki/Channel_One_Russia,,0.3,ru,https://www.1tv.ru/,0.2
-# 2020conservative.com,2757810,2019,2020 Conservative,VL,FN,L,https://mediabiasfactcheck.com/2020-conservative-bias/,,,0.6,,en,https://2020conservative.com/,0
-# 2020electioncenter.com,4494303,2020,Banned.Video,VL,CP,L,https://mediabiasfactcheck.com/2020electioncenter-com-bias/,,,0.3,0.6,en,https://2020electioncenter.com/,0
-# 21stcenturywire.com,1161239,2009,21st Century Wire,M,CP,L,https://mediabiasfactcheck.com/21st-century-wire/,,,0.2,-0.9,en,https://21stcenturywire.com/,0.2
-# 24jours.com,1162979,2017,24jours.com,L,FN,L,https://mediabiasfactcheck.com/24jours-com/,,,0.3,0.3,fr,https://www.24jours.com/,0.1
-# 369news.net,30000000,2015,369 News,M,CP,L,https://mediabiasfactcheck.com/369news/,,,0.2,0,en,https://369news.net/,0.2
-# 4chan.org,973,2004,4Chan,VL,FN,L,https://mediabiasfactcheck.com/4chan-bias/,,https://en.wikipedia.org/wiki/4chan,0.6,0.7,en,https://4chan.org/,0
-# """
-
-# Load the dataset into a DataFrame
+# Load your CSV file with known unreliable sources
 df = pd.read_csv(r"filtered_mbfc_fact_1.csv")
-# Normalize domain names for consistent matching
 df['Domain'] = df['Domain'].str.lower()
 
-# --- Pydantic Model for the API Response ---
 class CheckNewsResponse(BaseModel):
     is_reliable: bool
     message: str
@@ -43,7 +27,6 @@ class CheckNewsResponse(BaseModel):
     media_details: dict = None
     social_media_stats: dict = None
 
-# --- Utility Function ---
 def extract_domain(url: str) -> str:
     """
     Extract the domain from the provided URL.
@@ -54,7 +37,37 @@ def extract_domain(url: str) -> str:
         domain = domain[4:]
     return domain
 
-# --- FastAPI Endpoint ---
+def get_reddit_mentions(url: str) -> int:
+    """
+    Retrieve the number of Reddit posts mentioning the URL.
+    """
+    endpoint = f"https://www.reddit.com/api/info.json?url={url}"
+    headers = {'User-agent': 'Mozilla/5.0'}
+    try:
+        response = requests.get(endpoint, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        posts = data.get('data', {}).get('children', [])
+        return len(posts)
+    except Exception as e:
+        print(f"Error retrieving Reddit mentions: {e}")
+        return 0
+
+def save_reddit_data_to_csv(url: str, reddit_mentions: int):
+    """
+    Save the fetched Reddit data to a CSV file dynamically.
+    The CSV file will have columns: url, reddit_mentions, timestamp.
+    """
+    filename = "reddit_data.csv"
+    file_exists = os.path.isfile(filename)
+    with open(filename, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            # Write header if file does not exist.
+            writer.writerow(["url", "reddit_mentions", "timestamp"])
+        timestamp = datetime.utcnow().isoformat()
+        writer.writerow([url, reddit_mentions, timestamp])
+
 @app.get("/check_news", response_model=CheckNewsResponse)
 def check_news(url: str):
     """
@@ -64,21 +77,17 @@ def check_news(url: str):
       2. Extract the domain.
       3. Check the domain against the known unreliable sources dataset.
       4. Retrieve WHOIS info for additional domain data.
-      5. Simulate social media share stats.
+      5. Retrieve Reddit mentions for the URL and save that data to CSV.
     """
     # Validate URL
     if not validators.url(url):
         raise HTTPException(status_code=400, detail="Invalid URL provided.")
     
     domain = extract_domain(url)
-    
-    # Look for the domain in our dataset
     match = df[df['Domain'] == domain]
-    
-    # Retrieve WHOIS info (using python-whois module)
+   
     try:
         whois_info = whois.whois(url)
-        # Ensure we only return serializable info
         if isinstance(whois_info, dict):
             whois_info = {k: str(v) for k, v in whois_info.items() if v is not None}
         else:
@@ -86,7 +95,6 @@ def check_news(url: str):
     except Exception as e:
         whois_info = {"error": f"Could not retrieve WHOIS info: {str(e)}"}
     
-    # Determine if the source is flagged in our dataset
     if not match.empty:
         message = "This website is in the list of known unreliable sources."
         is_reliable = False
@@ -95,19 +103,18 @@ def check_news(url: str):
             "MBFC Fact": match.iloc[0]['MBFC Fact'],
             "MBFC Bias": match.iloc[0]['MBFC Bias'],
             "Media Bias/Fact Check": match.iloc[0]['Media Bias/Fact Check'],
-            # "Quality": match.iloc[0]['Quality'],
-            # "Score": match.iloc[0]['Score']
         }
     else:
         message = "No flagged misinformation detected."
         is_reliable = True
         media_details = {}
     
-    # Simulated social media statistics (dummy data)
+    reddit_mentions = get_reddit_mentions(url)
+    # Save the Reddit fetch data to a CSV file dynamically.
+    save_reddit_data_to_csv(url, reddit_mentions)
+    
     social_media_stats = {
-        "twitter_shares": random.randint(0, 1000),
-        "facebook_shares": random.randint(0, 1000),
-        "reddit_mentions": random.randint(0, 1000)
+        "reddit_mentions": reddit_mentions
     }
     
     return CheckNewsResponse(
@@ -119,7 +126,6 @@ def check_news(url: str):
         social_media_stats=social_media_stats
     )
 
-# --- Run the application ---
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
