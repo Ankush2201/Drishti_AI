@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SearchIcon, LoadingSpinner } from "./Icons";
 
@@ -19,6 +19,13 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
   const [searchType, setSearchType] = useState("keyword");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Monitor changes to searchType and redirect if it's set to "website"
+  useEffect(() => {
+    if (searchType === "website") {
+      router.push("/dashboard-news");
+    }
+  }, [searchType, router]);
+
   // Validate the search query based on the search type.
   let isQueryValid = false;
   const trimmedQuery = searchQuery.trim();
@@ -29,11 +36,6 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
     } else if (searchType === "hashtag") {
       // Hashtag search: valid only if it starts with a "#"
       isQueryValid = trimmedQuery.startsWith("#");
-    } else if (searchType === "website") {
-      // Website search: validate using a regex for a valid domain/URL.
-      const websiteRegex =
-        /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
-      isQueryValid = websiteRegex.test(trimmedQuery);
     }
   }
 
@@ -43,7 +45,7 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
   const handleSearch = async () => {
     if (!isQueryValid) return;
 
-    // Determine sources based on what is selected.
+    // Determine which sources are selected.
     let sources: string[] = [];
     if (
       selectedSources &&
@@ -53,10 +55,13 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
         .filter(([_, isSelected]) => isSelected)
         .map(([source]) => source);
     } else {
+      // If no specific source is selected, use all three platforms.
       sources = ["twitter", "reddit", "mastodon"];
     }
 
     setIsLoading(true);
+
+    // Build the query string.
     const queryString = new URLSearchParams({
       q: trimmedQuery,
       searchType,
@@ -64,7 +69,14 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
     }).toString();
 
     try {
-      router.push(`/dashboard-reddit?${queryString}`);
+      if (selectedSources?.twitter) {
+        // For searches with Twitter selected,
+        // redirect to /dashboard-twitter with the query string.
+        router.push(`/dashboard-twitter?${queryString}`);
+      } else {
+        // Otherwise, redirect to dashboard-reddit (for example).
+        router.push(`/dashboard-reddit?${queryString}`);
+      }
     } catch (error) {
       console.error("Navigation error:", error);
       setIsLoading(false);
@@ -115,7 +127,8 @@ export default function SearchBar({ selectedSources }: SearchBarProps) {
           <button
             onClick={handleSearch}
             disabled={isDisabled}
-            className={`ml-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg transition-all duration-300 flex items-center gap-2 ${
+            className={`ml-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white 
+            rounded-lg transition-all duration-300 flex items-center gap-2 ${
               !isDisabled
                 ? "hover:from-blue-700 hover:to-purple-700"
                 : "disabled:opacity-50 disabled:cursor-not-allowed"

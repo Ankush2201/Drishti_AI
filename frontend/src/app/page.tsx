@@ -32,7 +32,7 @@ export default function HomePage() {
             </h2>
             <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
               Discover insights across multiple platforms with our advanced
-              analytics tools
+              analytics tools.
             </p>
           </div>
 

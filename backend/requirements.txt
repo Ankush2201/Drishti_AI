@@ -1,4 +1,3 @@
 uvicorn
 validators
 whois
-matplplotlib
