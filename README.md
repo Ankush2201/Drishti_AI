@@ -1,7 +1,7 @@
 
 ---
 
-# Rakshak: Multi-Platform Social Media Analytics Dashboard
+# Rakshak: Multi-Platform Social Media Analytics Dashboard(📄 [Download News Analysis Approach PDF](./hackathon.pdf))
 
 Rakshak is an integrated analytics platform designed to collect, analyze, and visualize data from multiple social media sources and news outlets. The platform focuses primarily on Twitter data analysis, while also incorporating Reddit and news data to provide a comprehensive view of public sentiment, trending topics, and political bias. Rakshak is built to serve researchers, analysts, and developers interested in harnessing the power of social media and news for data-driven insights.
 
@@ -449,4 +449,4 @@ For questions, support, or contributions, please reach out via:
 
 ---
 
-📄 [Download News Analysis Approach PDF](./hackathon.pdf)
+
