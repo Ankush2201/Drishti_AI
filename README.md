@@ -38,6 +38,11 @@ https://drive.google.com/drive/folders/1-MxTBKAqpKGU_-CItFsLAs-h8wKpYVMC
 ![image](https://github.com/user-attachments/assets/35144b4b-02e1-4bb5-abd5-900f28ea6f97)
 
 
+## user flow:
+   ![image](https://github.com/user-attachments/assets/2d6fb67f-2f9c-48ef-9a60-6c56b7f5b177)
+
+
+
 ## screenshots:
 ![Landing_Page](https://github.com/user-attachments/assets/a2f4d0bb-3d6b-4045-be6b-14616447093d)
 
