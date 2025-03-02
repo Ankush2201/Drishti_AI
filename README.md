@@ -36,10 +36,19 @@ https://drive.google.com/drive/folders/1-MxTBKAqpKGU_-CItFsLAs-h8wKpYVMC
 
 
 ## screenshots:
+![Landing_Page](https://github.com/user-attachments/assets/a2f4d0bb-3d6b-4045-be6b-14616447093d)
 
+![image](https://github.com/user-attachments/assets/355c783a-425e-474c-b119-54d59bcee033)
+
+![image](https://github.com/user-attachments/assets/8d87d44f-5b81-4e10-b89e-6dc7f0ac5dd0)
+
+![image](https://github.com/user-attachments/assets/8a396e1f-003d-4f6c-b494-871ba809b379)
+
+![image](https://github.com/user-attachments/assets/1f0fe507-4d38-4d06-8421-ae40e7843078)
 
  ![Reddit](https://github.com/user-attachments/assets/ea2eed9b-21d4-4ceb-a682-d4547917dc81)
 
+![Uploading image.png…]()
 
 ---
 
