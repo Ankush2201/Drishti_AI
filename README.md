@@ -33,6 +33,9 @@ Rakshak is an integrated analytics platform designed to collect, analyze, and vi
 3. reddit operations :
 https://drive.google.com/drive/folders/1-MxTBKAqpKGU_-CItFsLAs-h8wKpYVMC
 
+## system   design :
+
+![image](https://github.com/user-attachments/assets/35144b4b-02e1-4bb5-abd5-900f28ea6f97)
 
 
 ## screenshots:
