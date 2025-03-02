@@ -41,6 +41,9 @@ https://drive.google.com/drive/folders/1-MxTBKAqpKGU_-CItFsLAs-h8wKpYVMC
 ## user flow:
    ![image](https://github.com/user-attachments/assets/2d6fb67f-2f9c-48ef-9a60-6c56b7f5b177)
 
+## novel approach user flow:
+  ![image](https://github.com/user-attachments/assets/cf1d0aa4-9e98-4b03-ad6f-77eac0efd3ac)
+
 
 
 ## screenshots:
