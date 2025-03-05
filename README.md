@@ -1,7 +1,7 @@
 
 ---
 
-# Rakshak: Multi-Platform Social Media Analytics Dashboard(📄 [Download News Analysis Approach PDF](./hackathon.pdf))
+# Drishti: Multi-Platform Social Media Analytics Dashboard(📄 [Download News Analysis Approach PDF](./hackathon.pdf))
 
 Rakshak is an integrated analytics platform designed to collect, analyze, and visualize data from multiple social media sources and news outlets. The platform focuses primarily on Twitter data analysis, while also incorporating Reddit and news data to provide a comprehensive view of public sentiment, trending topics, and political bias. Rakshak is built to serve researchers, analysts, and developers interested in harnessing the power of social media and news for data-driven insights.
 
@@ -457,7 +457,7 @@ Planned enhancements for Rakshak include:
 
 ## License and Acknowledgments
 
-Rakshak is licensed under the [MIT License](LICENSE).  
+Drishti is licensed under the [MIT License](LICENSE).  
 Special thanks to:
 - **Open-Source Libraries:**  
   Tom Select, Vis Network, and other libraries that power our visualizations.
@@ -468,13 +468,5 @@ Special thanks to:
 
 ---
 
-## Contact
-
-For questions, support, or contributions, please reach out via:
-- **Email:** [your.email@example.com](mailto:your.email@example.com)
-- **GitHub:** [github.com/yourusername](https://github.com/yourusername)
-- **Project Website:** [yourprojectsite.com](https://yourprojectsite.com)
-
----
 
 
